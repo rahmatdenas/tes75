@@ -87,27 +87,29 @@ body {
 
 /* Pembersih Float agar border item tidak tertimpa gambar */
 .timeline-item {
-  margin-bottom: 30px; 
-  padding-bottom: 20px; 
   border-bottom: 1px solid #eee;
   overflow: hidden; /* Clearfix ajaib */
 }
 
 .timeline-item h2.timeline-date {
-  margin-top: 0;
-  color: #b30000;
+   margin-bottom: 10px;
+    color: #b30000;
+    margin-top: 5px;
+    border-bottom: 1px solid #b30000;
+    padding-bottom: 10px;
 }
 
 .timeline-figure {
   float: right;
   width: 50%;
-  margin: 0 0 10px 15px;
+  margin: 7px 0 0px 15px;
   padding: 0;
 }
 
 .timeline-figure img {
   width: 100%;
   border-radius: 4px;
+   display: block;
 }
 
 .location-desc .location-name {
@@ -139,7 +141,6 @@ body {
 .custom-popup .popup-title {
   display: block;
   font-size: 1.1em;
-  margin-bottom: 4px;
 }
 
 .custom-popup .popup-date {
@@ -199,7 +200,7 @@ nav li.active a, nav li a.active {
    ========================================= */
 #details {
   display: none; /* Akan diubah JS menjadi block setelah loading */
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
   font-family: Merriweather, serif;
 }
 
@@ -267,9 +268,11 @@ nav li.active a, nav li a.active {
 
 .leaflet-popup-content {
   font-family: "Open Sans", sans-serif;
+    margin: 13px 13px;
 }
 
 .leaflet-popup-content img {
+       margin-bottom: 5px;
 }
 
 /* Kontrol Peta Tambahan */
