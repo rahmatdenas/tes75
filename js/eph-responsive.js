@@ -18,16 +18,19 @@
   }
 
   // 1. Hitung Terbuka (50%)
-  function getExpandedY() {
-    return panel.offsetHeight / 2; 
+function getExpandedY() {
+    // Gunakan tinggi layar fisik (innerHeight), bukan tinggi elemen (offsetHeight)
+    return window.innerHeight / 2; 
   }
   
   // 2. Hitung Tertutup (Sisa Header)
   function getCollapsedY() {
-    // Karena tinggi panel = 100% layar dikurangi Navigasi (50px),
-    // maka panel hanya perlu turun sejauh tingginya dikurangi tinggi Header.
+    // Ambil tinggi asli header secara dinamis (mengatasi jika teksnya jadi 2 baris)
     var headerHeight = header ? header.offsetHeight : 60;
-    return panel.offsetHeight - headerHeight; 
+    
+    // Kurangi tinggi layar fisik dengan tinggi header
+    // Opsional: Anda bisa menambahkan "- 5" di akhir jika ingin ada sedikit jarak aman dari bawah
+    return window.innerHeight - headerHeight; 
   }
 
   function clampY(y) {
