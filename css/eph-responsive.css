@@ -31,28 +31,6 @@
     pointer-events: none; /* KLIK MENEMBUS KE PETA */
   }
 
-  /* --- 3. NAVIGASI (DI DASAR LAYAR) --- */
-  nav {
-    pointer-events: auto; /* Navigasi bisa diklik */
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background: #822; 
-    z-index: 101;
-    display: flex;
-    align-items: center;
-  }
-
-  nav ul {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-  }
-
-  /* --- 4. PANEL (DI ATAS NAVIGASI) --- */
 #panel {
     pointer-events: auto;
     position: absolute;
