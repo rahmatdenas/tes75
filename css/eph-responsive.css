@@ -1,0 +1,105 @@
+@media (max-width: 800px) {
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    position: relative;
+  }
+
+  #panel, #map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    flex: none;
+  }
+
+  #map {
+    z-index: 1;
+  }
+
+  #panel {
+    z-index: 500;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    /* Translate bawaan dihilangkan karena sekarang 100% diatur JS */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  #panel.eph-dragging {
+    transition: none;
+  }
+
+  /* ---------- Modifikasi Header (#branding) Menjadi Pegangan ---------- */
+  #branding {
+    position: relative;
+    touch-action: none;   /* Cegah browser scroll halaman saat header didrag */
+    cursor: grab;
+    border-radius: 16px 16px 0 0;
+    padding-right: 40px;  /* Ruang agar teks tidak menabrak ikon panah */
+  }
+
+  #branding:active {
+    cursor: grabbing;
+  }
+
+  /* Desain Ikon Panah (Injeksi JS) */
+  #panel-toggle {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    margin-top: -2px;     /* Penyesuaian presisi vertikal */
+    transform: translateY(-50%) rotate(0deg);
+    font-size: 18px;
+    color: #fff;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  /* ---------- Branding & Navigasi Lebih Ringkas ---------- */
+  #branding p {
+    margin-top: 15px; /* Sedikit disesuaikan agar proporsional */
+    font-size: 11px;
+  }
+
+  #branding h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  nav ul {
+    margin: 0 20px 10px 20px;
+  }
+
+  /* ---------- Panel Detail ---------- */
+  #details,
+  #about {
+    padding: 16px;
+    /* Pastikan bagian yang bisa di-scroll tidak mentok */
+    height: calc(100% - 130px); 
+    overflow-y: auto;
+  }
+
+  .timeline-figure {
+    float: none;
+    width: 100%;
+    margin: 0 0 12px 0;
+  }
+
+  /* ---------- Popup Peta ---------- */
+  .leaflet-popup-content {
+    font-size: 15px;
+    line-height: 18px;
+  }
+}
+
+/* Ponsel berukuran sangat kecil */
+@media (max-width: 380px) {
+  #branding h1 {
+    font-size: 18px;
+  }
+}
