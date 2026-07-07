@@ -35,14 +35,13 @@ function loadPrimaryData() {
 function renderMapAndPanel() {
   let detailsContainer = document.getElementById('details');
   let markerBounds = [];
-  let allHtml = ''; // Optimasi: Kita kumpulkan HTML di sini dulu
+  let allHtml = ''; 
 
   // 1. RAKIT KONTEN HTML PANEL
   TimelineRecords.forEach((record, index) => {
     allHtml += `
-      <div class="timeline-item" id="item-${index}">
-        
-        <h2 class="timeline-date" style="cursor: pointer;" title="Klik untuk lihat di peta">${record.formattedDate}</h2>
+      <div class="timeline-item" id="item-${index}" data-index="${index}">
+        <h2 class="timeline-date" style="cursor: pointer;" title="Tampilkan di Peta">${record.formattedDate}</h2>
         
         ${record.imageUrl ? `
         <figure class="timeline-figure">
@@ -60,15 +59,15 @@ function renderMapAndPanel() {
     `;
   });
 
-  // Suntikkan HTML sekaligus (Jauh lebih ringan untuk browser!)
   detailsContainer.innerHTML = allHtml;
 
-  // 2. RENDER MARKER & SIMPAN REFERENSINYA
+  // 2. RENDER MARKER & SIMPAN REFERENSI
   TimelineRecords.forEach((record, index) => {
     if (record.lat && record.lon) {
       let marker = L.marker([record.lat, record.lon]).addTo(Map);
       
-      record.marker = marker; // KUNCI: Simpan marker ke dalam data record agar bisa dipanggil dari luar
+      // Simpan langsung di dalam objek record agar lebih rapi
+      record.marker = marker; 
       markerBounds.push([record.lat, record.lon]);
       
       let popupContent = `
@@ -80,17 +79,18 @@ function renderMapAndPanel() {
       `;
       marker.bindPopup(popupContent);
       
-      // Interaksi: Klik marker -> Scroll panel
+      // Interaksi: Klik marker otomatis scroll panel
       marker.on('click', function() {
         
-        // Matikan sensor scroll sementara agar tidak terjadi "tabrakan" perintah
-        detailsContainer.classList.add('sedang-auto-scroll');
-        setTimeout(() => detailsContainer.classList.remove('sedang-auto-scroll'), 1000);
-
+        // BUKA PANEL DI SELULER (Jangan sampai lupa ini!)
         if (typeof window.setMobilePanelExpanded === 'function') {
           window.setMobilePanelExpanded(true); 
         }
-        
+
+        // Kunci observer sementara agar tidak bentrok
+        detailsContainer.classList.add('sedang-auto-scroll');
+        setTimeout(() => detailsContainer.classList.remove('sedang-auto-scroll'), 1000);
+
         let targetItem = document.getElementById(`item-${index}`);
         setTimeout(function() {
           let scrollPos = targetItem.offsetTop - detailsContainer.offsetTop; 
@@ -101,49 +101,45 @@ function renderMapAndPanel() {
     }
   });
 
-  // ---------------------------------------------------------
-  // FITUR BARU 1: KLIK H2 UNTUK MEMBUKA MARKER
-  // ---------------------------------------------------------
+  // 3. FITUR: KLIK H2 = BUKA MARKER (Menggunakan Event Delegation - Lebih Ringan)
   detailsContainer.addEventListener('click', function(e) {
-    // Cek apakah yang diklik adalah elemen dengan kelas 'timeline-date' (H2)
     if (e.target && e.target.classList.contains('timeline-date')) {
       let parentDiv = e.target.closest('.timeline-item');
-      let index = parseInt(parentDiv.id.replace('item-', ''));
+      let index = parseInt(parentDiv.getAttribute('data-index'));
       let targetRecord = TimelineRecords[index];
 
-      // Buka popup dan biarkan Leaflet menggeser peta secara otomatis
       if (targetRecord && targetRecord.marker) {
         targetRecord.marker.openPopup();
+        Map.panTo(targetRecord.marker.getLatLng()); // Geser peta perlahan
       }
     }
   });
 
-  // ---------------------------------------------------------
-  // FITUR BARU 2: SCROLL PANEL OTOMATIS BUKA MARKER 
-  // ---------------------------------------------------------
-  detailsContainer.addEventListener('scroll', function() {
-    // Jangan lakukan apa-apa jika panel sedang digulir otomatis akibat klik marker
+  // 4. FITUR: SCROLLTELLING DENGAN INTERSECTION OBSERVER (Performa Juara!)
+  let observer = new IntersectionObserver((entries) => {
+    // Jangan pancing marker jika panel sedang digulir otomatis oleh klik marker
     if (detailsContainer.classList.contains('sedang-auto-scroll')) return;
 
-    let containerRect = detailsContainer.getBoundingClientRect();
-    let items = detailsContainer.querySelectorAll('.timeline-item');
-
-    // Pindai semua item, cari mana yang sedang menempel di atas batas panel
-    for (let i = 0; i < items.length; i++) {
-      let rect = items[i].getBoundingClientRect();
-
-      // Logika: Jika bagian atas elemen ini sudah menyentuh batas atas wadah,
-      // dan bagian bawah elemen ini masih berada di dalam wadah (belum terlewat)
-      if (rect.top <= containerRect.top + 30 && rect.bottom >= containerRect.top + 30) {
-        let targetRecord = TimelineRecords[i];
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        let index = entry.target.getAttribute('data-index');
+        let targetRecord = TimelineRecords[index];
         
-        // Cek agar tidak memanggil openPopup berulang-ulang pada marker yang sama
         if (targetRecord && targetRecord.marker && !targetRecord.marker.isPopupOpen()) {
           targetRecord.marker.openPopup();
+          Map.panTo(targetRecord.marker.getLatLng()); // Opsional: Peta otomatis mengikuti
         }
-        break; // Segera hentikan pencarian jika sudah menemukan elemen yang aktif
       }
-    }
+    });
+  }, {
+    root: detailsContainer,
+    rootMargin: '0px 0px -90% 0px', // Area deteksi hanya di 10% teratas panel
+    threshold: 0
+  });
+
+  // Pasang pengintai ke setiap div
+  document.querySelectorAll('.timeline-item').forEach(item => {
+    observer.observe(item);
   });
 
   // Matikan animasi loading dan tampilkan panel details
