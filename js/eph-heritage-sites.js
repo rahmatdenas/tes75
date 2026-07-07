@@ -116,30 +116,35 @@ function renderMapAndPanel() {
   });
 
   // 4. FITUR: SCROLLTELLING DENGAN INTERSECTION OBSERVER (Performa Juara!)
+  // 4. FITUR: SCROLLTELLING SUPER RINGAN (Optimal untuk HP Spek Rendah)
   let observer = new IntersectionObserver((entries) => {
-    // Jangan pancing marker jika panel sedang digulir otomatis oleh klik marker
+    
+    // Abaikan deteksi jika panel sedang otomatis menggulir karena klik marker
     if (detailsContainer.classList.contains('sedang-auto-scroll')) return;
 
     entries.forEach(entry => {
+      // entry.isIntersecting bernilai TRUE saat judul H2 menyentuh "kawat jebakan" di atas panel
       if (entry.isIntersecting) {
-        let index = entry.target.getAttribute('data-index');
+        let parentDiv = entry.target.closest('.timeline-item');
+        let index = parentDiv.getAttribute('data-index');
         let targetRecord = TimelineRecords[index];
         
         if (targetRecord && targetRecord.marker && !targetRecord.marker.isPopupOpen()) {
           targetRecord.marker.openPopup();
-          Map.panTo(targetRecord.marker.getLatLng()); // Opsional: Peta otomatis mengikuti
+          Map.panTo(targetRecord.marker.getLatLng());
         }
       }
     });
   }, {
     root: detailsContainer,
-    rootMargin: '0px 0px -90% 0px', // Area deteksi hanya di 10% teratas panel
+    // "Kawat Jebakan" (Sensor): Hanya mengawasi ruang 10% paling atas di bawah header
+    rootMargin: '0px 0px -90% 0px', 
     threshold: 0
   });
 
-  // Pasang pengintai ke setiap div
-  document.querySelectorAll('.timeline-item').forEach(item => {
-    observer.observe(item);
+  // HANYA pasang sensor di judul H2. Sangat menghemat beban memori browser!
+  document.querySelectorAll('.timeline-date').forEach(judul => {
+    observer.observe(judul);
   });
 
   // Matikan animasi loading dan tampilkan panel details
