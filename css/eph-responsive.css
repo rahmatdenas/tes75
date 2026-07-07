@@ -93,11 +93,6 @@
     margin-bottom: 20px;
     flex: 1;          
     overflow-y: auto; 
-    
-    /* PERBAIKAN 2: Bantalan gaib setinggi 50% layar */
-    /* Ini akan menjadi "tumbal" yang tenggelam di luar layar, 
-       sehingga item terakhir Anda bisa digulir naik sampai menyentuh header! */
-    padding-bottom: 50vh; 
   }
 
   .leaflet-popup-content {
