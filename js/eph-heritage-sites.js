@@ -221,7 +221,7 @@ function fokusKeMarker(latlng) {
   // Kita geser titik pusat kamera sebesar 25% dari tinggi peta.
   // Jika popup atau gambar di dalamnya cukup tinggi dan masih sedikit tertutup, 
   // angka 0.25 ini bisa Anda naikkan menjadi 0.30 atau 0.35.
-  let yOffset = mapHeight * 0.25; 
+  let yOffset = mapHeight * 0.05; 
 
   let targetPoint = Map.project(latlng, targetZoom);
   
