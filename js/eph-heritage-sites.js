@@ -51,8 +51,8 @@ function renderMapAndPanel() {
   function hentikanPlay() {
     if (!isPlaying) return;
     isPlaying = false;
-    clearInterval(playInterval);
-    if (playBtn) playBtn.innerHTML = '▶'; // Kembalikan ke ikon Play
+    clearInterval(pla  yInterval);
+    if (playBtn) playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
   }
 
   function jalankanAnimasiSatuLangkah() {
@@ -101,7 +101,7 @@ function renderMapAndPanel() {
         hentikanPlay(); // Pengguna menekan Pause
       } else {
         isPlaying = true;
-        playBtn.innerHTML = '⏸'; // Ubah ikon ke Pause
+        playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         jalankanAnimasiSatuLangkah(); // Jalan 1x langsung tanpa jeda awal
         playInterval = setInterval(jalankanAnimasiSatuLangkah, 3000); // Jalan tiap 3 detik
       }
