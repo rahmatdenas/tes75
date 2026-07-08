@@ -53,6 +53,11 @@
   #panel.eph-dragging {
     transition: none;
   }
+  
+.leaflet-popup-tip-container {
+  margin-top: -1px !important; 
+}
+  
 
 /* --- HANDLE TIPIS UNTUK DRAG --- */
   #drag-handle {
