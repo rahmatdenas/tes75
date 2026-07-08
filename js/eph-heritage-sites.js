@@ -88,14 +88,15 @@ function renderMapAndPanel() {
     let curIdx = parseInt(indexAktif === '-1' ? '-1' : indexAktif);
     let nextIdx = curIdx + 1;
 
-    // 2. LOGIKA KETIKA ANIMASI BERAKHIR: KEMBALI KE PENGANTAR
+    // 2. LOGIKA KETIKA ANIMASI BERAKHIR: KEMBALI KE PENGANTAR (DENGAN ANIMASI FLY)
     if (nextIdx >= TimelineRecords.length) {
       hentikanPlay();
       indexAktif = '-1'; 
       
       Map.closePopup(); 
       if (markerBounds.length > 0) {
-        Map.fitBounds(markerBounds, { padding: [40, 40] }); 
+        // PERBAIKAN: Menggunakan flyToBounds agar kamera mundur secara smooth
+        Map.flyToBounds(markerBounds, { padding: [40, 40], duration: 1.5 }); 
       }
       
       detailsContainer.classList.add('sedang-auto-scroll');
@@ -144,7 +145,6 @@ function renderMapAndPanel() {
         hentikanPlay(); 
       } else {
         isPlaying = true;
-        // Ubah ke ikon PAUSE
         playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         
         if (bgAudio) {
@@ -161,7 +161,7 @@ function renderMapAndPanel() {
   }
 
   // ==========================================
-  // RAKIT KONTEN HTML PANEL (Lanjutan)
+  // RAKIT KONTEN HTML PANEL
   // ==========================================
   TimelineRecords.forEach((record, index) => {
     allHtml += `
@@ -235,7 +235,7 @@ function renderMapAndPanel() {
   });
 
   // ==========================================
-  // FITUR: KLIK H2 (TERMASUK PENGANTAR)
+  // FITUR: KLIK H2 (TERMASUK PENGANTAR DENGAN ANIMASI FLY)
   // ==========================================
   detailsContainer.addEventListener('click', function(e) {
     if (e.target && e.target.classList.contains('timeline-date')) {
@@ -248,7 +248,8 @@ function renderMapAndPanel() {
         indexAktif = '-1';
         Map.closePopup();
         if (markerBounds.length > 0) {
-          Map.fitBounds(markerBounds, { padding: [40, 40] });
+          // PERBAIKAN: Menggunakan flyToBounds saat teks pengantar diklik manual
+          Map.flyToBounds(markerBounds, { padding: [40, 40], duration: 1.5 });
         }
         
         detailsContainer.classList.add('sedang-auto-scroll');
@@ -317,7 +318,8 @@ function renderMapAndPanel() {
         if (indexAktif === '-1') {
           Map.closePopup();
           if (markerBounds.length > 0) {
-            Map.fitBounds(markerBounds, { padding: [40, 40] });
+            // PERBAIKAN: Menggunakan flyToBounds saat discroll manual ke atas (Pengantar)
+            Map.flyToBounds(markerBounds, { padding: [40, 40], duration: 1.5 });
           }
         } else {
           let indexAngka = parseInt(indexAktif);
@@ -342,11 +344,10 @@ function renderMapAndPanel() {
 }
 
 // ==========================================
-// FUNGSI UTILITAS TETAP SAMA
+// KUNCI PENGATURAN ZOOM MARKER ADA DI SINI
 // ==========================================
-
 function fokusKeMarker(latlng) {
-  let targetZoom = 14;
+  let targetZoom = 14; // <--- UBAH ANGKA INI UNTUK MENGATUR BATAS ZOOM IN KAMERA KETIKA FOKUS
   let mapHeight = document.getElementById('map').clientHeight;
   let yOffset = mapHeight * 0.05; 
 
