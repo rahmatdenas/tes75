@@ -87,7 +87,7 @@
     flex-shrink: 0; /* Header jangan sampai menyusut */
     box-sizing: border-box;
     overflow: hidden;
-    margin-top: 5px;
+    margin-top: 0px;
   }
 
 
