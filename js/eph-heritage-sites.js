@@ -6,22 +6,35 @@
 let isPlaying = false;
 let playInterval = null;
 let bgAudio = null;
+let jedaAutoScroll = null;
 
 function hentikanPlay() {
   isPlaying = false; 
   
+  // Matikan interval autoplay
   if (playInterval !== null) {
     clearInterval(playInterval);
     playInterval = null;
+  }
+
+  // BARU: Paksa hancurkan timer auto-scroll yang tersisa
+  if (jedaAutoScroll !== null) {
+    clearTimeout(jedaAutoScroll);
+    jedaAutoScroll = null;
   }
 
   if (bgAudio) {
     bgAudio.pause();
   }
 
+  // BARU: Hapus kelas pengunci secara instan agar scroll manual langsung terbaca
+  let detailsContainer = document.getElementById('details');
+  if (detailsContainer) {
+    detailsContainer.classList.remove('sedang-auto-scroll');
+  }
+
   let playBtn = document.getElementById('play-btn');
   if (playBtn) {
-    // Kembali ke ikon PLAY
     playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
   }
 }
@@ -71,7 +84,6 @@ function renderMapAndPanel() {
   `; 
   
   let jedaScroll = null;
-  let jedaAutoScroll = null;
   let indexAktif = '-1';
 
   hentikanPlay();
