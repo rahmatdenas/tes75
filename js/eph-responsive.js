@@ -62,12 +62,12 @@ function applyTransform(y) {
   };
 
 function onTouchStart(e) {
-    if (!isMobile()) return;
-    
-    // [KUNCI BARU] Jika yang disentuh adalah tombol Play (atau ikon di dalamnya), abaikan fungsi tarik!
-    if (e.target.closest('#play-btn')) return;
+  if (!isMobile()) return;
+  
+  // UBAH ID NYA JADI -mobile DI SINI
+  if (e.target.closest('#play-btn-mobile')) return; 
 
-    var touch = e.touches ? e.touches[0] : e;
+  var touch = e.touches ? e.touches[0] : e;
     
     dragging = true;
     moved = false;
@@ -152,14 +152,13 @@ if (detailsContainer) {
     }
 
     // 2. SUNTIKKAN TOMBOL PLAY MENGGANTIKAN PANEL TOGGLE (CHEVRON)
-var playBtn = document.getElementById('play-btn');
-    if (!playBtn) {
-      playBtn = document.createElement('button');
-      playBtn.id = 'play-btn';
-      // Ikon Play diganti menggunakan SVG murni
-      playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; 
-      header.appendChild(playBtn);
-    }
+var playBtn = document.getElementById('play-btn-mobile');
+  if (!playBtn) {
+    playBtn = document.createElement('button');
+    playBtn.id = 'play-btn-mobile'; 
+    playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; 
+    header.appendChild(playBtn);
+  }
     
     // Hapus chevron lama jika kebetulan masih ada di HTML
     var oldToggle = document.getElementById('panel-toggle');
