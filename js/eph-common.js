@@ -4,16 +4,31 @@ window.addEventListener('load', init);
 
 // Inisialisasi aplikasi
 function init() {
+  
+  // --- TARUH KODE PERBAIKAN MARKER DI SINI ---
+  delete L.Icon.Default.prototype._getIconUrl;
+
+  L.Icon.Default.mergeOptions({
+    iconUrl       : 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    iconRetinaUrl : 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    shadowUrl     : 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    iconSize      : [25, 41],     // Ukuran asli gambar
+    iconAnchor    : [12.5, 41],   // 12.5 menarik sumbu X persis ke tengah
+    popupAnchor   : [0, -41],
+    shadowSize    : [41, 41],
+    shadowAnchor  : [13, 41]
+  });
+  // -------------------------------------------
+
   initMap();
   loadPrimaryData(); // Dipanggil dari JS 3
 }
 
 // Inisialisasi Peta Leaflet (Tanpa Cluster)
 function initMap() {
-  // TAMBAHAN: Masukkan opsi { minZoom: 2 } di sini
   Map = new L.map('map', { 
     minZoom: 2 
-  }).setView([-0.789, 113.921], 5); // Default view (Indonesia)
+  }).setView([-0.789, 113.921], 5);
 
   let cartoLayer = new L.tileLayer(CARTO_LAYER_URL, {
     attribution : CARTO_LAYER_ATTRIBUTION,
